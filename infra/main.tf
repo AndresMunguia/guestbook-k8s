@@ -13,6 +13,16 @@ provider "aws" {
   region = var.region
 }
 
+terraform {
+  cloud {
+    organization = "andresmunguia"
+
+    workspaces {
+      name = "guestbook-k8s"
+    }
+  }
+}
+
 data "aws_availability_zones" "available" {}
 
 locals {
