@@ -41,7 +41,7 @@ jobs:
         run: |
           if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
             if [[ $GITHUB_BASE_REF == main ]]; then
-              terraformWorkspace=prod
+              terraformWorkspace=guestbook-k8s
             fi
             echo "TF_WORKSPACE=$terraformWorkspace" >> $GITHUB_ENV
             
