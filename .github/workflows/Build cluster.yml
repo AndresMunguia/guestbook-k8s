@@ -2,17 +2,18 @@ name: Deploy Infrastructure.
 
 
 on:
-  pull_request:
-    branches:
-      - develop
-      - main
   push:
-    branches:
-      - develop
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+    
 
 jobs:
   Update-infra:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./infra
     steps:
       - name: Checkout
         uses: actions/checkout@v3
