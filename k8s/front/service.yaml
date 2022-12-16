@@ -5,11 +5,18 @@ metadata:
   labels:
     app: mern-k8s
     component: front
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert:  arn:aws:acm:eu-west-1:577247986912:certificate/ef254ed1-35b2-4d9e-839d-f278f206b7c8
 spec:
-  selector:
-    component: front
   ports:
     - port: 80
+      name: http
       targetPort: 80
       protocol: TCP
-      name: http
+    - port: 443
+      name: https
+      targetPort: 80
+      protocol: TCP
+  type: LoadBalancer
+  selector:
+    component: front
