@@ -2,10 +2,13 @@ name: Deploy Infrastructure.
 
 
 on:
-  push:
-    branches: [ "develop" ]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches:
+      - develop
+      - main
+  push:
+    branches:
+      - develop
     
 
 jobs:
@@ -35,15 +38,15 @@ jobs:
         id: fmt
         run: terraform fmt -check
         continue-on-error: true
-
+            
       - name: Terraform Workspace
         id: workspace
         run: |
-          if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
-            if [[ $GITHUB_BASE_REF == main ]]; then
-              terraformWorkspace=guestbook-k8s
-            fi
-            echo "TF_WORKSPACE=$terraformWorkspace" >> $GITHUB_ENV
+          if [[ $GITHUB_EVENT_NAME == "pull_request" ]]; then
+            echo "TF_WORKSPACE=$GITHUB_BASE_REF" >> $GITHUB_ENV
+          else
+            echo "TF_WORKSPACE=$GITHUB_REF_NAME" >> $GITHUB_ENV
+          fi
             
       - name: Terraform Init
         id: init
@@ -61,6 +64,7 @@ jobs:
         id: apply
         if: ${{ ( steps.plan.outcome == 'success' ) }}
         run: terraform apply -auto-approve
+        continue-on-error: true
 
       - name: Terraform Output
         id: output
